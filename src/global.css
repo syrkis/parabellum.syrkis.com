@@ -1,0 +1,336 @@
+:root {
+    --red: #d65a5c; /* this one is for folke */
+    --blue: #787fc0;
+    --dark-red: #50293a;
+    --dark-blue: #242743;
+    --lavender: #e2e3f2;
+    --off-white: #f2e3e2;
+    --transition: 200ms ease-in-out;
+}
+body {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    font-size: 1.3em;
+    line-height: 2;
+    font-family: "Fira Code", serif;
+    transition:
+        background var(--transition),
+        color var(--transition);
+}
+circle {
+    transition:
+        cx var(--transition),
+        cy var(--transition),
+        r var(--transition),
+        fill var(--transition),
+        size var(--transition);
+}
+
+rect {
+    transition:
+        x var(--transition),
+        y var(--transition),
+        width var(--transition),
+        height var(--transition),
+        fill var(--transition);
+}
+
+@media (prefers-color-scheme: dark) {
+    body {
+        color: var(--off-white);
+        background: black;
+    }
+    svg {
+        fill: var(--off-white);
+    }
+}
+
+/* FROM +page.svelte */
+.system,
+.person {
+    padding: 0.75rem;
+    margin-bottom: 1rem;
+    border-radius: 0.5rem;
+    max-width: 80%;
+    white-space: pre-wrap;
+}
+
+.system {
+    align-self: flex-start;
+    color: var(--blue);
+    border-bottom-left-radius: 0.25rem;
+}
+
+.person {
+    align-self: flex-end;
+    margin-left: auto;
+    /* background-color: #e3f2fd; */
+    border-bottom-right-radius: 0.25rem;
+}
+
+@media (prefers-color-scheme: dark) {
+    .system {
+        color: var(--blue);
+    }
+
+    .person {
+        /* background-color: #1a3a5f; */
+    }
+}
+
+/* Chat history will grow/shrink based on available space */
+.chat-history {
+    flex: 1; /* Take up available space */
+    overflow-y: auto;
+    margin-bottom: 1rem;
+    display: flex;
+    flex-direction: column;
+    /* Calculate available height (container height minus input and logs) */
+    min-height: 0; /* Allow it to shrink below content size if needed */
+}
+
+/* Bottom section contains input and logs, fixed at bottom */
+.bottom-section {
+    margin-top: auto; /* Push to the bottom */
+    flex-shrink: 0; /* Don't allow this to shrink */
+}
+
+/* Input styling */
+form {
+    flex-shrink: 0; /* Don't allow form to shrink */
+}
+
+.input-container {
+    display: flex;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+
+.input-container input {
+    flex-grow: 1;
+    padding: 0.75rem 1rem;
+    border-radius: 4px;
+    border: 2px solid #ccc;
+    font-size: 1rem;
+    font-family: "Fira Code", monospace;
+    transition:
+        border-color 0.3s ease,
+        font-family 0.1s ease;
+}
+
+.input-container input.command-mode {
+    font-family: "Fira Code", monospace;
+}
+
+.input-container input:focus {
+    outline: none;
+}
+
+@media (prefers-color-scheme: dark) {
+    .input-container input {
+        background-color: #000;
+        border-color: #fff;
+        color: white;
+    }
+
+    .input-container input:focus {
+        border-color: var(--blue);
+    }
+}
+
+.container {
+    width: 100%;
+    height: 100vh; /* Full viewport height */
+    display: flex; /* Create a flex container for columns */
+    overflow: hidden; /* Prevent scrolling */
+    padding: 16px; /* Add padding around the whole container */
+    box-sizing: border-box; /* Include padding in the width/height calculation */
+    gap: 16px; /* Add gap between simulator and controller */
+    align-items: center; /* Center items vertically */
+}
+
+#simulator {
+    height: calc(
+        100vh - 32px
+    ); /* Exactly viewport height minus container padding */
+    aspect-ratio: 1/1; /* Keep it square */
+    /* border: 2px solid; /* Add a solid border */
+    overflow: hidden; /* Keep contents inside the border */
+    border-radius: 4px; /* Slightly rounded corners */
+    box-sizing: border-box; /* Include border in the height calculation */
+}
+
+#controler {
+    flex: 1; /* Take up remaining space */
+    height: calc(
+        100vh - 32px
+    ); /* Exactly viewport height minus container padding */
+    overflow-y: auto; /* Allow scrolling if content overflows */
+    border: 1px solid; /* Add a solid border */
+    padding: 12px; /* Add some padding inside the controller */
+    box-sizing: border-box; /* Include padding and border in the height calculation */
+    border-radius: 6px; /* Slightly rounded corners */
+    display: flex;
+    flex-direction: column;
+}
+
+.error {
+    padding: 0.75rem;
+    margin: 1rem 0;
+    border-radius: 4px;
+    background-color: #ffebee;
+    color: #c62828;
+    border-left: 4px solid #c62828;
+}
+
+@media (prefers-color-scheme: dark) {
+    .error {
+        background-color: rgba(198, 40, 40, 0.2);
+        color: #ef9a9a;
+    }
+}
+
+.log-history {
+    /* margin-top: 1rem; */
+    padding: 0 0.75rem;
+    overflow-y: auto;
+    height: 200px; /* Fixed height of 300px */
+}
+
+.log-entry {
+    margin-bottom: 0.25rem;
+    line-height: 1.5;
+    color: var(--red);
+}
+
+.log-time {
+    color: black;
+    margin-right: 0.5rem;
+    /* font-weight: bold; */
+    transition: color 0.3s ease;
+}
+
+.log-message {
+    word-break: break-word;
+}
+
+@media (prefers-color-scheme: dark) {
+    .log-time {
+        /* background-color: #1e1e1e; */
+        color: white;
+    }
+}
+
+.marks {
+    margin: auto;
+    width: 95%;
+}
+
+/* Styles moved from +page.svelte */
+/* Global styles to prevent text selection */
+main.container {
+    user-select: none; /* Prevent text selection globally */
+}
+
+/* Allow text selection for specific areas like chat history and logs */
+.chat-history,
+.log-history,
+.input-container {
+    user-select: text; /* Re-enable text selection for chat and logs */
+}
+
+/* Mark container and items styling */
+.mark-container {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin: 0 auto;
+}
+
+.mark-item {
+    font-size: 3.2rem;
+    user-select: none; /* Prevent text selection */
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mark-item-placeholder {
+    width: 50px;
+    height: 50px;
+}
+
+/* Ensure simulator explicitly prevents text selection and focus outlines */
+#simulator {
+    user-select: none;
+}
+
+/* Remove focus outline from simulator SVG */
+#simulator svg {
+    outline: none;
+}
+
+/* Remove focus outline from all elements within the simulator */
+#simulator * {
+    outline: none;
+}
+
+/* Interactive mark styling */
+.interactive-mark {
+    user-select: none;
+    position: relative;
+    font-size: 12pt;
+}
+
+.interactive-mark:hover::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    top: -20px;
+    left: 0;
+    background-color: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 2px 5px;
+    border-radius: 4px;
+    font-size: 12px;
+    white-space: nowrap;
+    pointer-events: none;
+    z-index: 10;
+}
+
+/* Styled tooltips for chess symbols */
+.mark-item {
+    position: relative;
+}
+
+.mark-item:hover::after {
+    content: attr(title);
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-size: 14px;
+    white-space: nowrap;
+    pointer-events: none;
+    z-index: 10;
+}
+
+/* Arrow for tooltip */
+.mark-item:hover::before {
+    content: "";
+    position: absolute;
+    bottom: calc(100% - 5px);
+    left: 50%;
+    transform: translateX(-50%) rotate(45deg);
+    width: 10px;
+    height: 10px;
+    background-color: rgba(0, 0, 0, 0.8);
+    pointer-events: none;
+    z-index: 9;
+}
